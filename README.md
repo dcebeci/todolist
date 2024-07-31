@@ -1,2 +1,2 @@
 # todolist
-Spring boot + React + postgreSQL todo list app
+Spring boot + React + mySQL todo list app
