@@ -1,7 +1,7 @@
 package com.dcebeci.todolist.services;
 
 import com.dcebeci.todolist.models.TodoModel;
-import com.dcebeci.todolist.repository.TodoRepository;
+import com.dcebeci.todolist.repositories.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

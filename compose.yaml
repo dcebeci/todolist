@@ -20,3 +20,8 @@ services:
       - 'POSTGRES_USER=myuser'
     ports:
       - '5432'
+management:
+  metrics:
+    export:
+      datadog:
+        enabled=false:
