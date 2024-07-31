@@ -1,4 +1,8 @@
 services:
+  spring:
+    docker:
+      compose:
+        enabled: false
   mysql:
     image: 'mysql:latest'
     environment:
