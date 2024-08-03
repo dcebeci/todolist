@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './todo-app-component.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 const TodoComponent = () => {
   const [todos, setTodos] = useState([]);
-  const [title, setTitle] = useState('');
   const [todoText, setTodoText] = useState('');
-  const [editingId, setEditingId] = useState(null); 
+  const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [titleError, setTitleError] = useState('');
   const [todoTextError, setTodoTextError] = useState('');
 
   useEffect(() => {
@@ -29,12 +29,6 @@ const TodoComponent = () => {
   };
 
   const addTodo = async () => {
-    if (!title.trim()) {
-      setTitleError('Title cannot be empty');
-      return;
-    } else {
-      setTitleError('');
-    }
     if (!todoText.trim()) {
       setTodoTextError('Todo text cannot be empty');
       return;
@@ -43,10 +37,9 @@ const TodoComponent = () => {
     }
     setLoading(true);
     try {
-      const newTodo = { title, todoText, cboxStatus: false };
+      const newTodo = { todoText, cboxStatus: false };
       const response = await axios.post('http://localhost:8080/api/todos', newTodo);
       setTodos([...todos, response.data]);
-      setTitle('');
       setTodoText('');
     } catch (err) {
       setError('Failed to add todo');
@@ -62,7 +55,6 @@ const TodoComponent = () => {
       setTodos(todos.filter(todo => todo.id !== id));
       if (id === editingId) {
         setEditingId(null);
-        setTitle('');
         setTodoText('');
       }
     } catch (err) {
@@ -88,17 +80,10 @@ const TodoComponent = () => {
 
   const editing = (todo) => {
     setEditingId(todo.id);
-    setTitle(todo.title);
     setTodoText(todo.todoText);
   };
 
   const saveEdit = async () => {
-    if (!title.trim()) {
-      setTitleError('Title cannot be empty');
-      return;
-    } else {
-      setTitleError('');
-    }
     if (!todoText.trim()) {
       setTodoTextError('Todo text cannot be empty');
       return;
@@ -107,11 +92,10 @@ const TodoComponent = () => {
     }
     setLoading(true);
     try {
-      const updatedTodo = { title, todoText, cboxStatus: todos.find(todo => todo.id === editingId).cboxStatus };
+      const updatedTodo = { todoText, cboxStatus: todos.find(todo => todo.id === editingId).cboxStatus };
       const response = await axios.put(`http://localhost:8080/api/todos/${editingId}`, updatedTodo);
       setTodos(todos.map(todo => (todo.id === editingId ? response.data : todo)));
       setEditingId(null);
-      setTitle('');
       setTodoText('');
     } catch (err) {
       setError('Failed to update todo');
@@ -124,18 +108,11 @@ const TodoComponent = () => {
     <div className="todo-container">
       <h1>Todo List</h1>
       <div className="input-container">
-        <input 
-          type="text" 
-          placeholder="Title" 
-          value={title} 
-          onChange={(e) => setTitle(e.target.value)} 
-        />
-        {titleError && <p className="error">{titleError}</p>}
-        <input 
-          type="text" 
-          placeholder="Enter todo" 
-          value={todoText} 
-          onChange={(e) => setTodoText(e.target.value)} 
+        <input className='todoTextInput'
+          type="text"
+          placeholder="Enter todo"
+          value={todoText}
+          onChange={(e) => setTodoText(e.target.value)}
         />
         {todoTextError && <p className="error">{todoTextError}</p>}
         {editingId ? (
@@ -149,17 +126,21 @@ const TodoComponent = () => {
       <ul>
         {todos.map(todo => (
           <li key={todo.id}>
-            <input 
-              type="checkbox" 
-              checked={todo.cboxStatus} 
-              onChange={() => toggleComplete(todo.id)} 
+            <input
+              type="checkbox"
+              checked={todo.cboxStatus}
+              onChange={() => toggleComplete(todo.id)}
             />
             <span className={todo.cboxStatus ? 'completed' : ''}>
-              {todo.title} - {todo.todoText}
+               {todo.todoText}
             </span>
             <div className="button-group">
-              <button onClick={() => editing(todo)} disabled={editingId === todo.id}>Edit</button>  
-              <button onClick={() => deleteTodo(todo.id)} disabled={editingId === todo.id}>Delete</button>
+              <button className='editButton' onClick={() => editing(todo)} disabled={editingId === todo.id}>
+                <FontAwesomeIcon icon={faEdit}/>
+              </button>
+              <button className='deleteButton' onClick={() => deleteTodo(todo.id)} disabled={editingId === todo.id}>
+                <FontAwesomeIcon icon={faTrashAlt}/>
+              </button>
             </div>
           </li>
         ))}

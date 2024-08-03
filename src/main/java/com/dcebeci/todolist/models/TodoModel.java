@@ -1,6 +1,4 @@
 package com.dcebeci.todolist.models;
-
-
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,8 +9,6 @@ public class TodoModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String title;
     private String todoText;
     private boolean cboxStatus;
 }

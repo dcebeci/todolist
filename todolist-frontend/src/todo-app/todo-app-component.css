@@ -59,7 +59,7 @@
   
   li span.completed {
     text-decoration: line-through;
-    color: #aaa;
+    color: #0400ff;
   }
   
   .button-group {
@@ -74,19 +74,27 @@
     cursor: pointer;
   }
   
-  .button-group .edit {
-    background-color: #007bff;
+  .button-group .editButton {
+    background-color: #ffa600;
     color: white;
   }
   
-  .button-group .delete {
+  .button-group .deleteButton {
     background-color: #dc3545;
     color: white;
   }
+
+  .button-group .editButton:disabled,
+.button-group .deleteButton:disabled {
+  background-color: grey;
+  color: #ccc;
+  cursor: not-allowed;
+}
   
   .error {
     color: red;
     font-size: 0.9em;
-    margin-top: -10px;
+    font-weight: bold;
+    margin-top: -35px;
   }
   
