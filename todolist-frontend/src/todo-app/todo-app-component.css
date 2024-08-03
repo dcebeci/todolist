@@ -55,6 +55,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-bottom: 10px;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
   }
   
   li span.completed {
@@ -95,6 +96,10 @@
     color: red;
     font-size: 0.9em;
     font-weight: bold;
-    margin-top: -35px;
+    margin-top: 0px;
   }
-  
+  @media (max-width:480px){
+    .todo-container{
+        margin:20px;
+    }
+  }

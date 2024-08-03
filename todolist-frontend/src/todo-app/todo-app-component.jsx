@@ -118,7 +118,7 @@ const TodoComponent = () => {
         {editingId ? (
           <button onClick={saveEdit} disabled={loading}>Save changes</button>
         ) : (
-          <button onClick={addTodo} disabled={loading}>Add new task</button>
+          <button onClick={addTodo} disabled={loading}>Add todo</button>
         )}
       </div>
       {loading && <p>Loading...</p>}
