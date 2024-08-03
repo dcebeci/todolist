@@ -9,6 +9,8 @@ const TodoComponent = () => {
   const [editingId, setEditingId] = useState(null); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [titleError, setTitleError] = useState('');
+  const [todoTextError, setTodoTextError] = useState('');
 
   useEffect(() => {
     fetchTodos();
@@ -27,11 +29,23 @@ const TodoComponent = () => {
   };
 
   const addTodo = async () => {
+    if (!title.trim()) {
+      setTitleError('Title cannot be empty');
+      return;
+    } else {
+      setTitleError('');
+    }
+    if (!todoText.trim()) {
+      setTodoTextError('Todo text cannot be empty');
+      return;
+    } else {
+      setTodoTextError('');
+    }
     setLoading(true);
     try {
       const newTodo = { title, todoText, cboxStatus: false };
-      await axios.post('http://localhost:8080/api/todos', newTodo);
-      fetchTodos();
+      const response = await axios.post('http://localhost:8080/api/todos', newTodo);
+      setTodos([...todos, response.data]);
       setTitle('');
       setTodoText('');
     } catch (err) {
@@ -45,7 +59,12 @@ const TodoComponent = () => {
     setLoading(true);
     try {
       await axios.delete(`http://localhost:8080/api/todos/${id}`);
-      fetchTodos();
+      setTodos(todos.filter(todo => todo.id !== id));
+      if (id === editingId) {
+        setEditingId(null);
+        setTitle('');
+        setTodoText('');
+      }
     } catch (err) {
       setError('Failed to delete todo');
     } finally {
@@ -59,7 +78,7 @@ const TodoComponent = () => {
       const todo = todos.find(todo => todo.id === id);
       const updatedTodo = { ...todo, cboxStatus: !todo.cboxStatus };
       await axios.put(`http://localhost:8080/api/todos/${id}`, updatedTodo);
-      fetchTodos();
+      setTodos(todos.map(todo => (todo.id === id ? updatedTodo : todo)));
     } catch (err) {
       setError('Failed to update todo');
     } finally {
@@ -74,11 +93,23 @@ const TodoComponent = () => {
   };
 
   const saveEdit = async () => {
+    if (!title.trim()) {
+      setTitleError('Title cannot be empty');
+      return;
+    } else {
+      setTitleError('');
+    }
+    if (!todoText.trim()) {
+      setTodoTextError('Todo text cannot be empty');
+      return;
+    } else {
+      setTodoTextError('');
+    }
     setLoading(true);
     try {
       const updatedTodo = { title, todoText, cboxStatus: todos.find(todo => todo.id === editingId).cboxStatus };
-      await axios.put(`http://localhost:8080/api/todos/${editingId}`, updatedTodo);
-      fetchTodos();
+      const response = await axios.put(`http://localhost:8080/api/todos/${editingId}`, updatedTodo);
+      setTodos(todos.map(todo => (todo.id === editingId ? response.data : todo)));
       setEditingId(null);
       setTitle('');
       setTodoText('');
@@ -90,21 +121,23 @@ const TodoComponent = () => {
   };
 
   return (
-    <div>
+    <div className="todo-container">
       <h1>Todo List</h1>
-      <div>
+      <div className="input-container">
         <input 
           type="text" 
           placeholder="Title" 
           value={title} 
           onChange={(e) => setTitle(e.target.value)} 
         />
+        {titleError && <p className="error">{titleError}</p>}
         <input 
           type="text" 
-          placeholder="enter todo" 
+          placeholder="Enter todo" 
           value={todoText} 
           onChange={(e) => setTodoText(e.target.value)} 
         />
+        {todoTextError && <p className="error">{todoTextError}</p>}
         {editingId ? (
           <button onClick={saveEdit} disabled={loading}>Save changes</button>
         ) : (
@@ -112,18 +145,22 @@ const TodoComponent = () => {
         )}
       </div>
       {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
       <ul>
         {todos.map(todo => (
-          <li key={todo.id} className={todo.cboxStatus ? 'completed' : ''}>
+          <li key={todo.id}>
             <input 
               type="checkbox" 
               checked={todo.cboxStatus} 
               onChange={() => toggleComplete(todo.id)} 
             />
-            {todo.title} - {todo.todoText}
-            <button onClick={() => editing(todo)}>Edit</button>
-            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
+            <span className={todo.cboxStatus ? 'completed' : ''}>
+              {todo.title} - {todo.todoText}
+            </span>
+            <div className="button-group">
+              <button onClick={() => editing(todo)} disabled={editingId === todo.id}>Edit</button>  
+              <button onClick={() => deleteTodo(todo.id)} disabled={editingId === todo.id}>Delete</button>
+            </div>
           </li>
         ))}
       </ul>
