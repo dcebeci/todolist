@@ -3,6 +3,8 @@ import axios from 'axios';
 import './todo-app-component.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { Tooltip } from 'react-tooltip';
+
 
 const TodoComponent = () => {
   const [todos, setTodos] = useState([]);
@@ -126,15 +128,19 @@ const TodoComponent = () => {
           value={todoText}
           onChange={(e) => setTodoText(e.target.value)}
         />
+      
         {todoTextError && <p className="error">{todoTextError}</p>}
         {editingId ? (
           <button onClick={saveEdit} disabled={loading}>Save changes</button>
         ) : (
           <button onClick={addTodo} disabled={loading}>Add todo</button>
-          
         )}
+      <button className='deleteCompletedButton' onClick={deleteCompletedTodos} disabled={loading} data-tooltip-id="deleteChecked" data-tooltip-content="Delete All Checked Todos">
+          <FontAwesomeIcon icon={faTrashAlt}/>
+        </button>
+        <Tooltip id="deleteChecked" />
       </div>
-      <button onClick={deleteCompletedTodos} disabled={loading}>Delete Checked Todos</button>
+      
       {loading && <p>Loading...</p>}
       {error && <p className="error">{error}</p>}
       <ul>
