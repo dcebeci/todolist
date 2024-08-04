@@ -31,6 +31,9 @@ npm install
 
 npm start
 
+#Presentation
+
 Slayt pdf > [TodoList.pdf](https://github.com/user-attachments/files/16488693/TodoList.pdf)
 
+Slayt as .odp [todoList.odp](https://github.com/user-attachments/files/16488703/todoList.odp)
 
