@@ -15,6 +15,7 @@ MySQL 8.0
 #Setup 
 
 git clone https://github.com/dcebeci/todolist.git
+
 cd todolist
 
 #Backend startup
