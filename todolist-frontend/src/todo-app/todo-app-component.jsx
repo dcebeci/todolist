@@ -78,6 +78,18 @@ const TodoComponent = () => {
     }
   };
 
+  const deleteCompletedTodos = async () => {
+    setLoading(true);
+    try {
+      await axios.delete('http://localhost:8080/api/todos/completed');
+      setTodos(todos.filter(todo => !todo.cboxStatus));
+    } catch (err) {
+      setError('Failed to delete completed todos');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const editing = (todo) => {
     setEditingId(todo.id);
     setTodoText(todo.todoText);
@@ -119,8 +131,10 @@ const TodoComponent = () => {
           <button onClick={saveEdit} disabled={loading}>Save changes</button>
         ) : (
           <button onClick={addTodo} disabled={loading}>Add todo</button>
+          
         )}
       </div>
+      <button onClick={deleteCompletedTodos} disabled={loading}>Delete Checked Todos</button>
       {loading && <p>Loading...</p>}
       {error && <p className="error">{error}</p>}
       <ul>

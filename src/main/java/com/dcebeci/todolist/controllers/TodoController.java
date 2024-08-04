@@ -15,14 +15,17 @@ public class TodoController {
 
     @Autowired
     private TodoService todoService;
+
     @GetMapping
     public List<TodoModel> getAllTodos() {
         return todoService.findAll();
     }
+
     @GetMapping("/{id}")
     public Optional<TodoModel> getTodoById(@PathVariable Long id) {
         return todoService.findById(id);
     }
+
     @PostMapping
     public TodoModel createTodoModel(@RequestBody TodoModel todoModel) {
         return todoService.save(todoModel);
@@ -33,17 +36,15 @@ public class TodoController {
         todoModel.setId(id);
         return todoService.save(todoModel);
     }
+
     @DeleteMapping("/{id}")
     public void deleteTodoModel(@PathVariable Long id) {
         todoService.deleteById(id);
     }
 
-
-
-
-
-
-
-
+    @DeleteMapping("/completed")
+    public void deleteAllCompleted() {
+        todoService.deleteAllCompletedTodos();
+    }
 
 }
