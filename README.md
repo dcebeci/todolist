@@ -13,18 +13,24 @@ MySQL 8.0
 
 
 #Setup 
-git clone https://github.com/dcebeci/todolist.git
 
+git clone https://github.com/dcebeci/todolist.git
 cd todolist
+
 #Backend startup
+
 ./mvnw clean install
+
 ./mvnw spring-boot:run
 
 #Frontend Startup
+
 cd todolist-frontend
+
 npm install
+
 npm start
 
-[TodoList.pdf](https://github.com/user-attachments/files/16488693/TodoList.pdf)
+Slayt pdf > [TodoList.pdf](https://github.com/user-attachments/files/16488693/TodoList.pdf)
 
 
