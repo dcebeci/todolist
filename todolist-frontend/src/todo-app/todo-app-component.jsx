@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Button, Popconfirm } from 'antd';
 import './todo-app-component.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
@@ -13,10 +14,21 @@ const TodoComponent = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [todoTextError, setTodoTextError] = useState('');
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     fetchTodos();
   }, []);
+
+
+  const handleConfirm = () => {
+    deleteCompletedTodos();
+    setVisible(false);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
 
   const fetchTodos = async () => {
     setLoading(true);
@@ -135,9 +147,23 @@ const TodoComponent = () => {
         ) : (
           <button onClick={addTodo} disabled={loading}>Add todo</button>
         )}
-      <button className='deleteCompletedButton' onClick={deleteCompletedTodos} disabled={loading} data-tooltip-id="deleteChecked" data-tooltip-content="Delete All Checked Todos">
-          <FontAwesomeIcon icon={faTrashAlt}/>
-        </button>
+          <Popconfirm
+          title="Are you sure to delete all checked todos?"
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+          okText="Yes"
+          cancelText="No"
+          open={visible}
+        >
+          <Button className='deleteCompletedButton'
+            onClick={() => setVisible(true)}
+            disabled={loading}
+            data-tooltip-id="deleteChecked"
+            data-tooltip-content="Delete All Checked Todos"
+          >
+            <FontAwesomeIcon icon={faTrashAlt} />
+          </Button>
+        </Popconfirm>
         <Tooltip id="deleteChecked" />
       </div>
       
